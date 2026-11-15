@@ -13,6 +13,37 @@ static void ok_logger(Service *s, IpcReq *req, IpcResp *resp) {
 }
 
 static void friend_service(Service *s, IpcReq *req, IpcResp *resp) {
+    if (req->cmd == 10101) {
+        IpcBuf *out = out_buf(req, 0);
+        if (out && out->addr) memset((void *)(uintptr_t)out->addr, 0, out->size);
+        OUT(uint32_t, 0) = 0;
+        resp_size(resp, 4);
+        return;
+    }
+    ok_logger(s, req, resp);
+}
+
+SERVICE("csrng", csrng) {
+    (void)s;
+    if (req->cmd == 0) {
+        IpcBuf *out = out_buf(req, 0);
+        if (!out || !out->addr) {
+            resp->result = MAKE_RESULT(10, 9);
+            return;
+        }
+        arc4random_buf((void *)(uintptr_t)out->addr, out->size);
+        return;
+    }
+    ok_logger(s, req, resp);
+}
+
+SERVICE("hwopus", hwopus) {
+    (void)s;
+    if (req->cmd == 1) {
+        OUT(uint32_t, 0) = 0x100000;
+        resp_size(resp, 4);
+        return;
+    }
     ok_logger(s, req, resp);
 }
 

@@ -389,8 +389,12 @@ static void application_functions(Service *s, IpcReq *req, IpcResp *resp) {
         break;
     }
     case 23: memcpy(resp->data, "1.0.0", 6); resp_size(resp, 0x10); break;
+    case 22:
+        LOG("[am] SetTerminateResult 0x%x\n", IN(uint32_t, 0));
+        break;
     case 40: OUT(uint8_t, 0) = 0; resp_size(resp, 1); break;  // NotifyRunning
     case 50: {  // GetPseudoDeviceId
+        LOG("[am] GetPseudoDeviceId\n");
         static const uint8_t pseudo_device_id[16] = {
             0x9d, 0x42, 0x7a, 0x16, 0x5c, 0x83, 0x4e, 0xb1,
             0xa7, 0x20, 0x6f, 0xd8, 0x31, 0x95, 0xc4, 0x0b,
