@@ -240,8 +240,10 @@ int main(int argc, char **argv) {
         uint64_t program_id = game_program_id_from_npdm(npdm);
         if (game_program_id_supported(program_id) ||
             !memcmp(id, za_build[0], 8) || !memcmp(id, za_build[1], 8) || !memcmp(id, za_build[2], 8)) {
+            g_program_id = program_id;
             skip_launcher = true;
             g_saves_first = !explicit_skip;  // (the start screen opens, with its CONTINUE: runtime/ui/saves_ui.mm)
+            saves_select_latest();  // keep Sword/Shield isolated from the legacy Z-A save directory
 #ifdef _WIN32
             extern int rt_stderr_is_console(void);
             if (rt_stderr_is_console()) {

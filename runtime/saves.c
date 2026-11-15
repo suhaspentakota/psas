@@ -1,4 +1,5 @@
 #include "saves.h"
+#include "game_profile.h"
 #include "platform.h"
 #include "save_info.h"
 #include <dirent.h>
@@ -258,6 +259,14 @@ const char *saves_route_replay_dir(const char *name) {
 const char *saves_current_path(void) { return g_save_dir ? g_save_dir : DEFAULT_DIR; }
 
 void saves_select(const char *id) {
+    if (game_kind() != GAME_ZA) {
+        static char game_dir[64];
+        snprintf(game_dir, sizeof game_dir, "saves/%s", game_kind() == GAME_SWORD ? "Sword" : "Shield");
+        mkdir("saves", 0755);
+        mkdir(game_dir, 0755);
+        g_save_dir = game_dir;
+        return;
+    }
     if (!valid_id(id)) id = "";
     static char dir[128];
     slot_path(id, dir, sizeof dir);
@@ -266,6 +275,10 @@ void saves_select(const char *id) {
 }
 
 void saves_select_latest(void) {
+    if (game_kind() != GAME_ZA) {
+        saves_select("");
+        return;
+    }
     SaveSlot slots[SAVE_SLOTS_MAX];
     int n = saves_list(slots, SAVE_SLOTS_MAX), best = -1;
     for (int i = 0; i < n; i++)
