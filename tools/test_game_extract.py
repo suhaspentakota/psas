@@ -72,7 +72,7 @@ class ImportBoundaries(unittest.TestCase):
             with self.subTest(patch=patch), self.assertRaises(ImportFailure): program_content(data, patch)
 
     def test_accepts_sword_and_shield_title_ids(self):
-        for title in (0x0100ABF008968000, 0x01008BB008C9C000):
+        for title in (0x0100ABF008968000, 0x01008DB008C2C000):
             self.assertEqual(program_content(cnmt(title), False), 'ab' * 16 + '.nca')
             self.assertEqual(program_content(cnmt(title + 0x800, 0x81), True), 'ab' * 16 + '.nca')
 

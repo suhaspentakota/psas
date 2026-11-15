@@ -11,7 +11,7 @@ GameKind game_kind_from_program_id(uint64_t program_id) {
     switch (base_program_id(program_id)) {
     case 0x0100F43008C44000ull: return GAME_ZA;
     case 0x0100ABF008968000ull: return GAME_SWORD;
-    case 0x01008BB008C9C000ull: return GAME_SHIELD;
+    case 0x01008DB008C2C000ull: return GAME_SHIELD;
     default: return GAME_UNKNOWN;
     }
 }

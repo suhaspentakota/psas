@@ -11,7 +11,7 @@ import tempfile
 GAME_IDS = {
     0x0100F43008C44000: "Pokémon Legends: Z-A",
     0x0100ABF008968000: "Pokémon Sword",
-    0x01008BB008C9C000: "Pokémon Shield",
+    0x01008DB008C2C000: "Pokémon Shield",
 }
 
 # Updates use the base title ID plus 0x800. Keep the low 12 bits out of comparisons.
