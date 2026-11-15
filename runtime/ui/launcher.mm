@@ -2196,7 +2196,7 @@ extern "C" bool launcher_run(const char *root, void (*boot_fn)(const char *)) {
                         game_program_id_from_npdm((g_root + "/exefs/main.npdm").c_str()));
                     if (kind == GAME_ZA) {
                         float gap = 28 * s, cw = ds.x - 2 * pad - 20 * s, lw = (cw - gap) * 0.6f, x0 = (ds.x - cw) * 0.5f;
-                        int col = saves_home_draw(g_font_small, ready, !ready || busy, !g_play_focused, false, x0, top, lw, ch);
+                        int col = saves_home_draw(g_font_small, ready, true, !g_play_focused, false, x0, top, lw, ch);
                         if (col) act = col;
                         OnlineView ov;
                         online_view(status, busy, &ov);
