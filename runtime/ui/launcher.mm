@@ -1191,12 +1191,16 @@ static int home_chrome(float s, ImVec2 ds) {
     ImVec2 tp(x + ls + 16 * s, y - 2 * s);
     for (float d : {3.0f, 1.5f}) dl->AddText(g_font_title, ts, ImVec2(tp.x + d, tp.y + d), IM_COL32(0, 4, 20, 140), ui_tr("MonZaMac"));
     dl->AddText(g_font_title, ts, tp, IM_COL32(238, 244, 255, 255), ui_tr("MonZaMac"));
-    dl->AddText(g_font_small, 20 * s, ImVec2(tp.x + 2 * s, tp.y + ts + 2 * s), IM_COL32(166, 185, 207, 255), ui_tr("Pok\xc3\xa9mon Legends: Z-A \xc2\xb7 Apple Silicon"));
+    GameKind header_kind = game_kind_from_program_id(
+        game_program_id_from_npdm((g_root + "/exefs/main.npdm").c_str()));
+    std::string header_sub = std::string(game_title(header_kind)) + " \xc2\xb7 Apple Silicon";
+    dl->AddText(g_font_small, 20 * s, ImVec2(tp.x + 2 * s, tp.y + ts + 2 * s),
+                IM_COL32(166, 185, 207, 255), ui_tr(header_sub.c_str()));
 
     int act = 0;
     ImVec2 saved = ImGui::GetCursorScreenPos();
     {   // the logo, name and subtitle are one button: back to the home page (from Settings or Saves)
-        const char *sub = ui_tr("Pok\xc3\xa9mon Legends: Z-A \xc2\xb7 Apple Silicon");
+        const char *sub = ui_tr(header_sub.c_str());
         float tw = fmaxf(g_font_title->CalcTextSizeA(ts, FLT_MAX, 0, ui_tr("MonZaMac")).x, g_font_small->CalcTextSizeA(20 * s, FLT_MAX, 0, sub).x);
         ImVec2 a0(x - 10 * s, y - 8 * s), a1(tp.x + tw + 14 * s, y + ls + 8 * s);
         ImGui::SetCursorScreenPos(a0);
@@ -2686,14 +2690,17 @@ extern "C" bool launcher_run(const char *root, void (*boot_fn)(const char *)) {
                         while (struct dirent *e = readdir(d)) dlc |= strstr(e->d_name, ".bin") != NULL;
                         closedir(d);
                     }
-                    ImGui::TextColored(ImVec4(0.66f, 0.76f, 0.98f, 1), ui_tr("Nintendo Switch  \xc2\xb7  v2.0.2  \xc2\xb7  %s"),
-                                       ui_tr(dlc ? "DLC found" : "DLC not found"));
+                    GameKind current_kind = game_kind_from_program_id(
+                        game_program_id_from_npdm((g_root + "/exefs/main.npdm").c_str()));
+                    const char *current_title = ui_tr(game_title(current_kind));
+                    ImGui::TextColored(ImVec4(0.66f, 0.76f, 0.98f, 1), ui_tr("Nintendo Switch  \xc2\xb7  %s"),
+                                       current_title);
                     if (!busy) {
                         ImGui::SameLine();
                         const char *games = g_game_roots.size() > 1 ? "Switch game..." : "Add game...";
                         if (ImGui::SmallButton(ui_tr(games))) page = SETUP;
                     }
-                    if (!dlc && !busy) {
+                    if (current_kind == GAME_ZA && !dlc && !busy) {
                         ImGui::SameLine();
                         if (g_dlc_busy) ImGui::TextDisabled(ui_tr("Adding DLC..."));
                         else if (ImGui::SmallButton(ui_tr("Add DLC..."))) {
