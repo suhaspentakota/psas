@@ -2688,6 +2688,11 @@ extern "C" bool launcher_run(const char *root, void (*boot_fn)(const char *)) {
                     }
                     ImGui::TextColored(ImVec4(0.66f, 0.76f, 0.98f, 1), ui_tr("Nintendo Switch  \xc2\xb7  v2.0.2  \xc2\xb7  %s"),
                                        ui_tr(dlc ? "DLC found" : "DLC not found"));
+                    if (!busy) {
+                        ImGui::SameLine();
+                        const char *games = g_game_roots.size() > 1 ? "Switch game..." : "Add game...";
+                        if (ImGui::SmallButton(ui_tr(games))) page = SETUP;
+                    }
                     if (!dlc && !busy) {
                         ImGui::SameLine();
                         if (g_dlc_busy) ImGui::TextDisabled(ui_tr("Adding DLC..."));
