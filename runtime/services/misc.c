@@ -12,6 +12,16 @@ static void ok_logger(Service *s, IpcReq *req, IpcResp *resp) {
     resp_size(resp, 0x10);
 }
 
+static void friend_service(Service *s, IpcReq *req, IpcResp *resp) {
+    ok_logger(s, req, resp);
+}
+
+SERVICE("friend:u", friend_u) {
+    (void)s;
+    if (req->cmd == 0) ipc_return_object(resp, service_new("IFriendService", friend_service, NULL));
+    else ok_logger(s, req, resp);
+}
+
 static uint32_t new_event_handle(void) {
     uint32_t w, r;
     kernel_create_event_pair(&w, &r);
